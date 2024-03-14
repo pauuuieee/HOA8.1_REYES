@@ -1,0 +1,27 @@
+---
+- hosts: Server1
+gather_facts: true
+become: yes
+become_user: root
+
+tasks:
+  - name: Collecting the PCAP file from the server
+    fetch:
+    src: /home/PCAP/hoa8.1.pcap
+    dest: /home/Hoa8.1/pcap_dest/
+    flat: yes
+
+- hosts: localhost
+  connection: local
+  gather_facts: false
+  tasks:
+    - name: PCAP files extraction
+    command: "tcpflow -r /home/HOA8.1/pcap_dest/hoa8.1.pcap -o /home/HOA8.1/
+    args:
+      creates: /home/hoa8.1/pcap_out/execuatble.exe
+      command: "cat /home/hoa8.1/pcap_out/report.xml"
+      register: cat_output
+      changed_when: false
+
+  -debug:
+      var: cat_output.stdout_lines
